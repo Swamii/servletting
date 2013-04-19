@@ -1,6 +1,7 @@
-- servletting -
+*** servletting ***
+
 Java web stuff.
 Tech's used:
-	Servlets
-	Maven
-	Hibernate (soon)
+- Servlets
+- Maven
+- Hibernate (soon)
