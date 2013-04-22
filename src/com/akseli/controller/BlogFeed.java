@@ -2,10 +2,10 @@ package com.akseli.controller;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
+import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,8 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.akseli.entity.BlogPost;
-import com.akseli.entity.Comment;
-import com.akseli.model.BlogHandler;
+import com.akseli.entity.dao.BlogPostDAO;
 import com.akseli.utils.StrUtils.NewLine;
 
 @WebServlet("/blog")
@@ -27,11 +26,15 @@ public class BlogFeed extends HttpServlet {
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ArrayList<BlogPost> blogPosts = 
-				BlogHandler.getInstance().getBlogPosts();
-		request.setAttribute("blogPosts", blogPosts);
-		request.getRequestDispatcher("blogfeed.jsp")
-			   .forward(request, response);
+		try {
+			List<BlogPost> blogPosts = BlogPostDAO.getAll();
+			request.setAttribute("blogPosts", blogPosts);
+			request.getRequestDispatcher("blogfeed.jsp")
+			.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,9 +50,13 @@ public class BlogFeed extends HttpServlet {
 		
 		Date date = new Date();
 		BlogPost blogPost = new BlogPost(user, date, title, body);
-		BlogHandler.getInstance().addBlogPost(blogPost);
 		
-		String destination = request.getHeader("Referer");
-		response.sendRedirect(destination);
+		try {
+			BlogPostDAO.addBlogPost(blogPost);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		response.sendRedirect(request.getHeader("Referer"));
 	}
 }

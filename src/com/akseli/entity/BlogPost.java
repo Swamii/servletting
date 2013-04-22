@@ -1,17 +1,50 @@
 package com.akseli.entity;
 
-import java.util.ArrayList;
-import java.util.Date;
 
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.IndexColumn;
+
+@Entity
+@Table(name="BLOGPOST")
 public class BlogPost {
 	
-	private int id;
+	@Id
+	@GeneratedValue
+	@Column(name="blogpost_id")
+	private Long id;
+	
+	@Column(name="username")
 	private String user;
+	
+	@Column(name="date_added")
 	private Date date;
+	
+	@Column(name="title")
 	private String title;
+	
+	@Column(name="body")
 	private String body;
-	private ArrayList<Comment> comments = new ArrayList<Comment>();
-		
+	
+	@OneToMany(cascade={CascadeType.ALL},
+			   fetch=FetchType.EAGER)
+	@JoinColumn(name="blogpost_id")
+	@IndexColumn(name="idx")
+	private List<Comment> comments;
+	
+	public BlogPost() {};
+	
 	public BlogPost(String user, Date date, String title, String body) {
 		setUser(user);
 		setDate(date);
@@ -51,20 +84,20 @@ public class BlogPost {
 		this.body = body;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public ArrayList<Comment> getComments() {
+	public List<Comment> getComments() {
 		return comments;
 	}
 
-	public void addComment(Comment comment) {
-		comments.add(comment);
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 	
 }

@@ -22,7 +22,7 @@ import="java.util.*, com.akseli.entity.*"%>
 			<ul id="comments-list" class="unstyled">
 			<c:forEach items="${comments}" var="comment">			
 				<li>
-				<p><span class="name">${comment.getName()}</span><span class="date"> posted on ${comment.getDate().toString()}</span>:</p>
+				<p><span class="name">${comment.getUser()}</span><span class="date"> posted on ${comment.getDate().toString()}</span>:</p>
 				<p class="comment">${comment.getComment()}</p>
 				</li>
 			</c:forEach>

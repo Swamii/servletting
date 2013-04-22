@@ -2,25 +2,52 @@ package com.akseli.entity;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="COMMENT")
 public class Comment {
 	
-	private String name;
-	private String comment;
-	private Date date = new Date();
-	private int blogPostId;
+	@Id
+	@GeneratedValue
+	@Column(name="comment_id")
+	private Long commentId;
 	
-	public Comment(String name, String comment, Date date) {
-		setName(name);
+	@Column(name="username")
+	private String userName;
+	
+	@Column(name="comment_text")
+	private String comment;
+	
+	@Column(name="date_added")
+	private Date date = new Date();
+	
+	@ManyToOne
+	@JoinColumn(name="blogpost_id",
+				insertable=false,
+				updatable=false)
+	private BlogPost blogPost;
+	
+	public Comment() {}
+	
+	public Comment(String userName, String comment, Date date) {
+		setUser(userName);
 		setComment(comment);
 		setDate(date);
 	}
 	
-	public String getName() {
-		return name;
+	public String getUser() {
+		return userName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUser(String userName) {
+		this.userName = userName;
 	}
 
 	public String getComment() {
@@ -39,12 +66,20 @@ public class Comment {
 		this.date = date;
 	}
 
-	public int getBlogPostId() {
-		return blogPostId;
+	public Long getCommentId() {
+		return commentId;
 	}
 
-	public void setBlogPostId(int blogPostId) {
-		this.blogPostId = blogPostId;
+	public void setCommentId(Long commentId) {
+		this.commentId = commentId;
+	}
+
+	public BlogPost getBlogPost() {
+		return blogPost;
+	}
+
+	public void setBlogPost(BlogPost blogPost) {
+		this.blogPost = blogPost;
 	}
 
 }
